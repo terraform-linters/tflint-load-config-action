@@ -1,6 +1,6 @@
-# Remote tflint config
+# tflint Load Config Action
 
-Copy a tflint configuration file from a remote repository to use with `tflint`.
+Copy a tflint configuration file from a remote repository to use locally with `tflint`.
 
 ## Usage
 
