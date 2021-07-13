@@ -1,0 +1,1 @@
+# tflint-load-config-action
