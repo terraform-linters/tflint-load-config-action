@@ -9,7 +9,7 @@ process.env.CI &&
     const filePath = await copyFile({
       owner,
       repo,
-      srcPath: path.resolve(__dirname, '../fixtures/.tflint.hcl'),
+      srcPath: 'fixtures',
       srcFilename: '.tflint.hcl',
       ref: 'main',
       dstPath: process.env.RUNNER_TEMP as string,
