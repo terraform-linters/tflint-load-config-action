@@ -18,7 +18,7 @@ process.env.CI &&
 
     expect(await fs.promises.readFile(filePath, 'utf8')).toEqual(
       await fs.promises.readFile(
-        path.resolve(__dirname, 'fixtures/.tflint.hcl'),
+        path.resolve(__dirname, '../fixtures/.tflint.hcl'),
         'utf8'
       )
     )
