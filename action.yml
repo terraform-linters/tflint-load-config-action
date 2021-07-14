@@ -1,6 +1,6 @@
-name: Remote tflint Config
-description: Copies a tflint configuration file from a remote repo for local use
-author: ryanwholey
+name: Load TFLint Config
+description: Loads a TFlint configuration file from a remote GitHub repository
+author: terraform-linters
 inputs:
   source-repo: 
     required: true
@@ -13,7 +13,7 @@ inputs:
     default: .tflint.hcl
   source-ref:
     description: Ref or branch of the remote repository to target
-    default: main
+    default: ''
   destination-path:
     description: Directory to write the config file
     default: ${{ runner.temp }}
@@ -25,7 +25,7 @@ inputs:
     description: Github access token, required for private repositories
 outputs:
   path:
-    description: The tflint configuration file path
+    description: The local path to the TFLint configuration file
 runs:
   using: 'node12'
   main: 'dist/index.js'
