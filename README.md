@@ -16,10 +16,7 @@ Copy a tflint configuration file from a remote repository to use locally with `t
         name: Setup TFLint
         with:
           tflint_version: v0.29.0
-      - run: |
-          tflint \
-          --format compact \
-          --config ${{ steps.load-remote-tflint-config.outputs.path }}
+      - run: tflint --format compact
 ```
 
 ### Action inputs
