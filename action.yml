@@ -7,22 +7,15 @@ inputs:
     description: The repository from which the configuration will be copied
   source-path:
     description: The directory in the remote repo where the configuration exists
-    default: .
-  source-filename:
-    description: The source filename
     default: .tflint.hcl
   source-ref:
     description: Ref or branch of the remote repository to target
     default: ''
   destination-path:
-    description: Directory to write the config file
-    default: ${{ runner.temp }}
-  destination-filename:
-    description: Name of the configuration file to be written
-    default: .tflint.hcl
+    description: Directory to write the config file. (Default $HOME/.tflint.hcl)
   token:
     required: false
-    description: Github access token, required for private repositories
+    description: Github personal access token, required for reading from private repositories
 outputs:
   path:
     description: The local path to the TFLint configuration file
