@@ -6,19 +6,18 @@ import {copyFile} from './copy'
 async function run(): Promise<void> {
   const [owner, repo] = core.getInput('source-repo').split('/')
 
-  const dstPath = core.getInput('destination-path') || path.join(os.homedir(), '.tflint.hcl')
-
   try {
-    await copyFile({
-      owner,
-      repo,
-      srcPath: core.getInput('source-path'),
-      ref: core.getInput('source-ref'),
-      dstPath,
-      token: core.getInput('token')
-    })
-
-    core.setOutput('path', dstPath)
+    core.setOutput(
+      'path',
+      await copyFile({
+        owner,
+        repo,
+        srcPath: core.getInput('source-path'),
+        ref: core.getInput('source-ref'),
+        dstPath: core.getInput('destination-path') || path.join(os.homedir(), '.tflint.hcl'),
+        token: core.getInput('token')
+      })
+    )
   } catch (error) {
     core.setFailed(error.message)
   }

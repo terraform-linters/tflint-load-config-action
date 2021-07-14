@@ -24,11 +24,9 @@ Copy a tflint configuration file from a remote repository to use locally with `t
 | Name | Description | Default |
 | --- | --- | --- |
 | `source-repo` | (Required) The repository to copy a tflint configuration from. Format: `owner/name` ||
-| `source-path` | The directory in the remote repo where the configuration exists | `.` |
-| `source-filename` | The source filename | `.tflint.hcl` |
+| `source-path` | Path to the configuration in teh remote repo | `.` |
 | `source-ref` | Ref or branch of the remote repository to target | `main` |
-| `destination-path` | Directory to write the config file | `${{ runner.temp }}` |
-| `destination-filename` | Name of the configuration file to be written | `.tflint.hcl` |
+| `destination-path` | File path to write the config file | `${{ runner.temp }}` |
 | `token` | Github token, required for access to private repos ||
 
 ### Action outputs
