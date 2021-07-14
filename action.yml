@@ -6,13 +6,13 @@ inputs:
     required: true
     description: The repository from which the configuration will be copied
   source-path:
-    description: The directory in the remote repo where the configuration exists
+    description: Path to the configuration file in the remote repository
     default: .tflint.hcl
   source-ref:
     description: Ref or branch of the remote repository to target
     default: ''
   destination-path:
-    description: Directory to write the config file. (Default $HOME/.tflint.hcl)
+    description: Path where configuration file will be written locally. (Default $HOME/.tflint.hcl)
   token:
     required: false
     description: Github personal access token, required for reading from private repositories
