@@ -10,8 +10,8 @@ interface CopyFileParameters {
   owner: string
   repo: string
   srcPath: string
-  ref: string
   dstPath: string
+  ref?: string
   token?: string
 }
 
@@ -31,10 +31,13 @@ export async function copyFile({
     owner,
     repo,
     path: srcPath,
-    ref
+    ...(ref ? {ref} : {})
   })) as {data: GetContentDataType}
 
-  await fs.promises.writeFile(dstPath, Buffer.from(data.content, 'base64').toString('utf8'))
+  await fs.promises.writeFile(
+    dstPath,
+    Buffer.from(data.content, 'base64').toString('utf8')
+  )
 
   return dstPath
 }
