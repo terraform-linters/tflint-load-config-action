@@ -21,4 +21,4 @@ jobs:
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: Update dist
-        file_pattern: dist/index.js
+        file_pattern: dist/*
