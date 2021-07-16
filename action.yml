@@ -10,7 +10,6 @@ inputs:
     default: .tflint.hcl
   source-ref:
     description: Ref or branch of the remote repository to target
-    default: ''
   destination-path:
     description: Path where configuration file will be written locally. (Default $HOME/.tflint.hcl)
   token:

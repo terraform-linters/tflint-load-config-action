@@ -14,7 +14,9 @@ async function run(): Promise<void> {
         repo,
         srcPath: core.getInput('source-path'),
         ref: core.getInput('source-ref'),
-        dstPath: core.getInput('destination-path') || path.join(os.homedir(), '.tflint.hcl'),
+        dstPath:
+          core.getInput('destination-path') ||
+          path.join(os.homedir(), '.tflint.hcl'),
         token: core.getInput('token')
       })
     )
