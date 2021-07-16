@@ -43,12 +43,8 @@ function copyFile({ owner, repo, srcPath, ref, dstPath, token }) {
         const octokit = new rest_1.Octokit({
             auth: token
         });
-        const { data } = (yield octokit.rest.repos.getContent({
-            owner,
-            repo,
-            path: srcPath,
-            ref
-        }));
+        const { data } = (yield octokit.rest.repos.getContent(Object.assign({ owner,
+            repo, path: srcPath }, (ref ? { ref } : {}))));
         yield fs.promises.writeFile(dstPath, Buffer.from(data.content, 'base64').toString('utf8'));
         return dstPath;
     });
@@ -105,7 +101,8 @@ function run() {
                 repo,
                 srcPath: core.getInput('source-path'),
                 ref: core.getInput('source-ref'),
-                dstPath: core.getInput('destination-path') || path.join(os.homedir(), '.tflint.hcl'),
+                dstPath: core.getInput('destination-path') ||
+                    path.join(os.homedir(), '.tflint.hcl'),
                 token: core.getInput('token')
             }));
         }
