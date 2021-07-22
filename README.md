@@ -1,21 +1,21 @@
 # tflint Load Config Action
 
-Copy a tflint configuration file from a remote repository to use locally with `tflint`.
+GitHub Action for copying a [TFLint](https://github.com/terraform-linters/tflint) configuration file from a remote repository.
 
 ## Usage
 
 ```yaml
+name: TFLint
+on: [push]
+jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: terraform-linters/tflint-load-config-action@v1
+      - uses: terraform-linters/tflint-load-config-action@v0
         with:
-          source-repo: ryanwholey/public-tflint-config
+          source-repo: me/tflint-config
       - uses: terraform-linters/setup-tflint@v1
-        name: Setup TFLint
-        with:
-          tflint_version: v0.29.0
       - run: tflint --format compact
 ```
 
