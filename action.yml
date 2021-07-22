@@ -1,6 +1,9 @@
 name: Load TFLint Config
 description: Loads a TFlint configuration file from a remote GitHub repository
 author: terraform-linters
+branding:
+  icon: download-cloud
+  color: purple
 inputs:
   source-repo: 
     required: true
