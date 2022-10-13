@@ -20,8 +20,12 @@ async function run(): Promise<void> {
         token: core.getInput('token')
       })
     )
-  } catch (error) {
-    core.setFailed(error.message)
+  } catch (err) {
+    if (err instanceof Error || typeof err === 'string') {
+      return core.setFailed(err)
+    }
+
+    throw err
   }
 }
 
