@@ -16,6 +16,6 @@ jobs:
           node-version: 16
           cache: npm
       - run: |
-          npm install
+          npm ci
       - run: |
           npm run all
