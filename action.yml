@@ -5,7 +5,7 @@ branding:
   icon: download-cloud
   color: purple
 inputs:
-  source-repo: 
+  source-repo:
     required: true
     description: The repository from which the configuration will be copied
   source-path:
