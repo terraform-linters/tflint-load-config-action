@@ -8,7 +8,11 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -61,7 +65,11 @@ exports.copyFile = copyFile;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -96,7 +104,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const [owner, repo] = core.getInput('source-repo').split('/');
         try {
-            core.setOutput('path', yield copy_1.copyFile({
+            core.setOutput('path', yield (0, copy_1.copyFile)({
                 owner,
                 repo,
                 srcPath: core.getInput('source-path'),
@@ -106,8 +114,11 @@ function run() {
                 token: core.getInput('token')
             }));
         }
-        catch (error) {
-            core.setFailed(error.message);
+        catch (err) {
+            if (err instanceof Error || typeof err === 'string') {
+                return core.setFailed(err);
+            }
+            throw err;
         }
     });
 }
