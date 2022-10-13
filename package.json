@@ -1,6 +1,6 @@
 {
   "name": "tflint-load-config-action",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": false,
   "description": "A Github action to fetch a remote tflint config",
   "main": "lib/main.js",
