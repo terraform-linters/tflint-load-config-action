@@ -18,3 +18,5 @@ jobs:
           npm ci
       - run: |
           npm run all
+        env:
+          INPUT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
