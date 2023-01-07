@@ -20,14 +20,11 @@ export async function copyFile({
   repo,
   srcPath,
   ref,
-  dstPath,
-  token
+  dstPath
 }: CopyFileParameters): Promise<string> {
-  const octokit = new Octokit({
-    auth: token
-  })
+  const octokit = new Octokit()
 
-  const {data} = (await octokit.rest.repos.getContent({
+  const {data} = (await octokit.repos.getContent({
     owner,
     repo,
     path: srcPath,

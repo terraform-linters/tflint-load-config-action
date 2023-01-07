@@ -16,8 +16,7 @@ async function run(): Promise<void> {
         ref: core.getInput('source-ref'),
         dstPath:
           core.getInput('destination-path') ||
-          path.join(os.homedir(), '.tflint.hcl'),
-        token: core.getInput('token')
+          path.join(os.homedir(), '.tflint.hcl')
       })
     )
   } catch (err) {
