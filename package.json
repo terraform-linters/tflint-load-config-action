@@ -26,7 +26,8 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@octokit/rest": "^20.0.1"
+    "@octokit/rest": "^20.0.1",
+    "node-fetch": "^2.6.12"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
