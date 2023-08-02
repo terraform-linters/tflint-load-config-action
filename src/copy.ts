@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import fetch from 'node-fetch'
 
 import {Octokit} from '@octokit/rest'
 
@@ -24,7 +25,8 @@ export async function copyFile({
   token
 }: CopyFileParameters): Promise<string> {
   const octokit = new Octokit({
-    auth: token
+    auth: token,
+    request: {fetch}
   })
 
   const {data} = (await octokit.rest.repos.getContent({
