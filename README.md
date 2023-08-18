@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: terraform-linters/tflint-load-config-action@v0
+      - uses: terraform-linters/tflint-load-config-action@v1
         with:
           source-repo: me/tflint-config
       - uses: terraform-linters/setup-tflint@v1
