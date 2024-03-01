@@ -10,9 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: node-version
+        uses: bendrucker/github-action-node-version@v1
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: ${{ steps.node-version.outputs.version }}
           cache: npm
       - run: |
           npm ci
