@@ -15,7 +15,7 @@ jobs:
       - uses: terraform-linters/tflint-load-config-action@v1
         with:
           source-repo: me/tflint-config
-      - uses: terraform-linters/setup-tflint@v1
+      - uses: terraform-linters/setup-tflint@v4
       - run: tflint --format compact
 ```
 
