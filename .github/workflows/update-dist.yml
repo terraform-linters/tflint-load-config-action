@@ -8,9 +8,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
+      - id: node-version
+        uses: bendrucker/github-action-node-version@v1
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: ${{ steps.node-version.outputs.version }}
           cache: npm
       - name: Install dependencies
         run: npm ci
