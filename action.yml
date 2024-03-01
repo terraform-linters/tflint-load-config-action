@@ -22,5 +22,5 @@ outputs:
   path:
     description: The local path to the TFLint configuration file
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
