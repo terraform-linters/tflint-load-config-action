@@ -46,8 +46,8 @@ exports.copyFile = void 0;
 const fs = __importStar(__nccwpck_require__(7147));
 const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const rest_1 = __nccwpck_require__(5375);
-function copyFile({ owner, repo, srcPath, ref, dstPath, token }) {
-    return __awaiter(this, void 0, void 0, function* () {
+function copyFile(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ owner, repo, srcPath, ref, dstPath, token }) {
         const octokit = new rest_1.Octokit({
             auth: token,
             request: { fetch: node_fetch_1.default }
