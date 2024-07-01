@@ -42,7 +42,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.copyFile = void 0;
+exports.copyFile = copyFile;
 const fs = __importStar(__nccwpck_require__(7147));
 const node_fetch_1 = __importDefault(__nccwpck_require__(467));
 const rest_1 = __nccwpck_require__(5375);
@@ -58,7 +58,6 @@ function copyFile(_a) {
         return dstPath;
     });
 }
-exports.copyFile = copyFile;
 
 
 /***/ }),
