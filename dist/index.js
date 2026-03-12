@@ -2180,7 +2180,7 @@ module.exports = __toCommonJS(dist_src_exports);
 var import_universal_user_agent = __nccwpck_require__(5030);
 
 // pkg/dist-src/version.js
-var VERSION = "9.0.5";
+var VERSION = "9.0.6";
 
 // pkg/dist-src/defaults.js
 var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
@@ -2285,9 +2285,9 @@ function addQueryParameters(url, parameters) {
 }
 
 // pkg/dist-src/util/extract-url-variable-names.js
-var urlVariableRegex = /\{[^}]+\}/g;
+var urlVariableRegex = /\{[^{}}]+\}/g;
 function removeNonChars(variableName) {
-  return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
+  return variableName.replace(/(?:^\W+)|(?:(?<!\W)\W+$)/g, "").split(/,/);
 }
 function extractUrlVariableNames(url) {
   const matches = url.match(urlVariableRegex);
@@ -2473,7 +2473,7 @@ function parse(options) {
     }
     if (url.endsWith("/graphql")) {
       if (options.mediaType.previews?.length) {
-        const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
+        const previewsFromAcceptHeader = headers.accept.match(/(?<![\w-])[\w-]+(?=-preview)/g) || [];
         headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
           const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
           return `application/vnd.github.${preview}-preview${format}`;
@@ -2712,17 +2712,17 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // pkg/dist-src/index.js
-var dist_src_exports = {};
-__export(dist_src_exports, {
+var index_exports = {};
+__export(index_exports, {
   composePaginateRest: () => composePaginateRest,
   isPaginatingEndpoint: () => isPaginatingEndpoint,
   paginateRest: () => paginateRest,
   paginatingEndpoints: () => paginatingEndpoints
 });
-module.exports = __toCommonJS(dist_src_exports);
+module.exports = __toCommonJS(index_exports);
 
 // pkg/dist-src/version.js
-var VERSION = "11.3.1";
+var VERSION = "11.4.4-cjs.2";
 
 // pkg/dist-src/normalize-paginated-list-response.js
 function normalizePaginatedListResponse(response) {
@@ -2733,8 +2733,7 @@ function normalizePaginatedListResponse(response) {
     };
   }
   const responseNeedsNormalization = "total_count" in response.data && !("url" in response.data);
-  if (!responseNeedsNormalization)
-    return response;
+  if (!responseNeedsNormalization) return response;
   const incompleteResults = response.data.incomplete_results;
   const repositorySelection = response.data.repository_selection;
   const totalCount = response.data.total_count;
@@ -2764,18 +2763,16 @@ function iterator(octokit, route, parameters) {
   return {
     [Symbol.asyncIterator]: () => ({
       async next() {
-        if (!url)
-          return { done: true };
+        if (!url) return { done: true };
         try {
           const response = await requestMethod({ method, url, headers });
           const normalizedResponse = normalizePaginatedListResponse(response);
           url = ((normalizedResponse.headers.link || "").match(
-            /<([^>]+)>;\s*rel="next"/
+            /<([^<>]+)>;\s*rel="next"/
           ) || [])[1];
           return { value: normalizedResponse };
         } catch (error) {
-          if (error.status !== 409)
-            throw error;
+          if (error.status !== 409) throw error;
           url = "";
           return {
             value: {
@@ -2836,7 +2833,8 @@ var paginatingEndpoints = [
   "GET /assignments/{assignment_id}/accepted_assignments",
   "GET /classrooms",
   "GET /classrooms/{classroom_id}/assignments",
-  "GET /enterprises/{enterprise}/copilot/usage",
+  "GET /enterprises/{enterprise}/code-security/configurations",
+  "GET /enterprises/{enterprise}/code-security/configurations/{configuration_id}/repositories",
   "GET /enterprises/{enterprise}/dependabot/alerts",
   "GET /enterprises/{enterprise}/secret-scanning/alerts",
   "GET /events",
@@ -2858,17 +2856,24 @@ var paginatingEndpoints = [
   "GET /organizations",
   "GET /orgs/{org}/actions/cache/usage-by-repository",
   "GET /orgs/{org}/actions/permissions/repositories",
+  "GET /orgs/{org}/actions/runner-groups",
+  "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories",
+  "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners",
   "GET /orgs/{org}/actions/runners",
   "GET /orgs/{org}/actions/secrets",
   "GET /orgs/{org}/actions/secrets/{secret_name}/repositories",
   "GET /orgs/{org}/actions/variables",
   "GET /orgs/{org}/actions/variables/{name}/repositories",
+  "GET /orgs/{org}/attestations/{subject_digest}",
   "GET /orgs/{org}/blocks",
   "GET /orgs/{org}/code-scanning/alerts",
+  "GET /orgs/{org}/code-security/configurations",
+  "GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories",
   "GET /orgs/{org}/codespaces",
   "GET /orgs/{org}/codespaces/secrets",
   "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories",
   "GET /orgs/{org}/copilot/billing/seats",
+  "GET /orgs/{org}/copilot/metrics",
   "GET /orgs/{org}/copilot/usage",
   "GET /orgs/{org}/dependabot/alerts",
   "GET /orgs/{org}/dependabot/secrets",
@@ -2877,6 +2882,9 @@ var paginatingEndpoints = [
   "GET /orgs/{org}/failed_invitations",
   "GET /orgs/{org}/hooks",
   "GET /orgs/{org}/hooks/{hook_id}/deliveries",
+  "GET /orgs/{org}/insights/api/route-stats/{actor_type}/{actor_id}",
+  "GET /orgs/{org}/insights/api/subject-stats",
+  "GET /orgs/{org}/insights/api/user-stats/{user_id}",
   "GET /orgs/{org}/installations",
   "GET /orgs/{org}/invitations",
   "GET /orgs/{org}/invitations/{invitation_id}/teams",
@@ -2894,6 +2902,7 @@ var paginatingEndpoints = [
   "GET /orgs/{org}/personal-access-token-requests/{pat_request_id}/repositories",
   "GET /orgs/{org}/personal-access-tokens",
   "GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories",
+  "GET /orgs/{org}/private-registries",
   "GET /orgs/{org}/projects",
   "GET /orgs/{org}/properties/values",
   "GET /orgs/{org}/public_members",
@@ -2902,6 +2911,7 @@ var paginatingEndpoints = [
   "GET /orgs/{org}/rulesets/rule-suites",
   "GET /orgs/{org}/secret-scanning/alerts",
   "GET /orgs/{org}/security-advisories",
+  "GET /orgs/{org}/team/{team_slug}/copilot/metrics",
   "GET /orgs/{org}/team/{team_slug}/copilot/usage",
   "GET /orgs/{org}/teams",
   "GET /orgs/{org}/teams/{team_slug}/discussions",
@@ -2931,6 +2941,7 @@ var paginatingEndpoints = [
   "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs",
   "GET /repos/{owner}/{repo}/activity",
   "GET /repos/{owner}/{repo}/assignees",
+  "GET /repos/{owner}/{repo}/attestations/{subject_digest}",
   "GET /repos/{owner}/{repo}/branches",
   "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations",
   "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs",
@@ -2973,6 +2984,7 @@ var paginatingEndpoints = [
   "GET /repos/{owner}/{repo}/issues/{issue_number}/events",
   "GET /repos/{owner}/{repo}/issues/{issue_number}/labels",
   "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions",
+  "GET /repos/{owner}/{repo}/issues/{issue_number}/sub_issues",
   "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline",
   "GET /repos/{owner}/{repo}/keys",
   "GET /repos/{owner}/{repo}/labels",
@@ -3048,6 +3060,7 @@ var paginatingEndpoints = [
   "GET /user/subscriptions",
   "GET /user/teams",
   "GET /users",
+  "GET /users/{username}/attestations/{subject_digest}",
   "GET /users/{username}/events",
   "GET /users/{username}/events/orgs/{org}",
   "GET /users/{username}/events/public",
@@ -3176,15 +3189,15 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // pkg/dist-src/index.js
-var dist_src_exports = {};
-__export(dist_src_exports, {
+var index_exports = {};
+__export(index_exports, {
   legacyRestEndpointMethods: () => legacyRestEndpointMethods,
   restEndpointMethods: () => restEndpointMethods
 });
-module.exports = __toCommonJS(dist_src_exports);
+module.exports = __toCommonJS(index_exports);
 
 // pkg/dist-src/version.js
-var VERSION = "13.2.2";
+var VERSION = "13.3.2-cjs.1";
 
 // pkg/dist-src/generated/endpoints.js
 var Endpoints = {
@@ -3194,6 +3207,9 @@ var Endpoints = {
     ],
     addCustomLabelsToSelfHostedRunnerForRepo: [
       "POST /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
+    ],
+    addRepoAccessToSelfHostedRunnerGroupInOrg: [
+      "PUT /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}"
     ],
     addSelectedRepoToOrgSecret: [
       "PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"
@@ -3623,6 +3639,9 @@ var Endpoints = {
     getGithubActionsBillingUser: [
       "GET /users/{username}/settings/billing/actions"
     ],
+    getGithubBillingUsageReportOrg: [
+      "GET /organizations/{org}/settings/billing/usage"
+    ],
     getGithubPackagesBillingOrg: ["GET /orgs/{org}/settings/billing/packages"],
     getGithubPackagesBillingUser: [
       "GET /users/{username}/settings/billing/packages"
@@ -3659,8 +3678,20 @@ var Endpoints = {
     update: ["PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}"]
   },
   codeScanning: {
+    commitAutofix: [
+      "POST /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix/commits"
+    ],
+    createAutofix: [
+      "POST /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix"
+    ],
+    createVariantAnalysis: [
+      "POST /repos/{owner}/{repo}/code-scanning/codeql/variant-analyses"
+    ],
     deleteAnalysis: [
       "DELETE /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}{?confirm_delete}"
+    ],
+    deleteCodeqlDatabase: [
+      "DELETE /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"
     ],
     getAlert: [
       "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}",
@@ -3670,11 +3701,20 @@ var Endpoints = {
     getAnalysis: [
       "GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"
     ],
+    getAutofix: [
+      "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix"
+    ],
     getCodeqlDatabase: [
       "GET /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"
     ],
     getDefaultSetup: ["GET /repos/{owner}/{repo}/code-scanning/default-setup"],
     getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
+    getVariantAnalysis: [
+      "GET /repos/{owner}/{repo}/code-scanning/codeql/variant-analyses/{codeql_variant_analysis_id}"
+    ],
+    getVariantAnalysisRepoTask: [
+      "GET /repos/{owner}/{repo}/code-scanning/codeql/variant-analyses/{codeql_variant_analysis_id}/repos/{repo_owner}/{repo_name}"
+    ],
     listAlertInstances: [
       "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"
     ],
@@ -3696,6 +3736,64 @@ var Endpoints = {
       "PATCH /repos/{owner}/{repo}/code-scanning/default-setup"
     ],
     uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
+  },
+  codeSecurity: {
+    attachConfiguration: [
+      "POST /orgs/{org}/code-security/configurations/{configuration_id}/attach"
+    ],
+    attachEnterpriseConfiguration: [
+      "POST /enterprises/{enterprise}/code-security/configurations/{configuration_id}/attach"
+    ],
+    createConfiguration: ["POST /orgs/{org}/code-security/configurations"],
+    createConfigurationForEnterprise: [
+      "POST /enterprises/{enterprise}/code-security/configurations"
+    ],
+    deleteConfiguration: [
+      "DELETE /orgs/{org}/code-security/configurations/{configuration_id}"
+    ],
+    deleteConfigurationForEnterprise: [
+      "DELETE /enterprises/{enterprise}/code-security/configurations/{configuration_id}"
+    ],
+    detachConfiguration: [
+      "DELETE /orgs/{org}/code-security/configurations/detach"
+    ],
+    getConfiguration: [
+      "GET /orgs/{org}/code-security/configurations/{configuration_id}"
+    ],
+    getConfigurationForRepository: [
+      "GET /repos/{owner}/{repo}/code-security-configuration"
+    ],
+    getConfigurationsForEnterprise: [
+      "GET /enterprises/{enterprise}/code-security/configurations"
+    ],
+    getConfigurationsForOrg: ["GET /orgs/{org}/code-security/configurations"],
+    getDefaultConfigurations: [
+      "GET /orgs/{org}/code-security/configurations/defaults"
+    ],
+    getDefaultConfigurationsForEnterprise: [
+      "GET /enterprises/{enterprise}/code-security/configurations/defaults"
+    ],
+    getRepositoriesForConfiguration: [
+      "GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories"
+    ],
+    getRepositoriesForEnterpriseConfiguration: [
+      "GET /enterprises/{enterprise}/code-security/configurations/{configuration_id}/repositories"
+    ],
+    getSingleConfigurationForEnterprise: [
+      "GET /enterprises/{enterprise}/code-security/configurations/{configuration_id}"
+    ],
+    setConfigurationAsDefault: [
+      "PUT /orgs/{org}/code-security/configurations/{configuration_id}/defaults"
+    ],
+    setConfigurationAsDefaultForEnterprise: [
+      "PUT /enterprises/{enterprise}/code-security/configurations/{configuration_id}/defaults"
+    ],
+    updateConfiguration: [
+      "PATCH /orgs/{org}/code-security/configurations/{configuration_id}"
+    ],
+    updateEnterpriseConfiguration: [
+      "PATCH /enterprises/{enterprise}/code-security/configurations/{configuration_id}"
+    ]
   },
   codesOfConduct: {
     getAllCodesOfConduct: ["GET /codes_of_conduct"],
@@ -3827,12 +3925,13 @@ var Endpoints = {
     cancelCopilotSeatAssignmentForUsers: [
       "DELETE /orgs/{org}/copilot/billing/selected_users"
     ],
+    copilotMetricsForOrganization: ["GET /orgs/{org}/copilot/metrics"],
+    copilotMetricsForTeam: ["GET /orgs/{org}/team/{team_slug}/copilot/metrics"],
     getCopilotOrganizationDetails: ["GET /orgs/{org}/copilot/billing"],
     getCopilotSeatDetailsForUser: [
       "GET /orgs/{org}/members/{username}/copilot"
     ],
     listCopilotSeats: ["GET /orgs/{org}/copilot/billing/seats"],
-    usageMetricsForEnterprise: ["GET /enterprises/{enterprise}/copilot/usage"],
     usageMetricsForOrg: ["GET /orgs/{org}/copilot/usage"],
     usageMetricsForTeam: ["GET /orgs/{org}/team/{team_slug}/copilot/usage"]
   },
@@ -3963,6 +4062,9 @@ var Endpoints = {
       "POST /repos/{owner}/{repo}/issues/{issue_number}/assignees"
     ],
     addLabels: ["POST /repos/{owner}/{repo}/issues/{issue_number}/labels"],
+    addSubIssue: [
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues"
+    ],
     checkUserCanBeAssigned: ["GET /repos/{owner}/{repo}/assignees/{assignee}"],
     checkUserCanBeAssignedToIssue: [
       "GET /repos/{owner}/{repo}/issues/{issue_number}/assignees/{assignee}"
@@ -4005,6 +4107,9 @@ var Endpoints = {
       "GET /repos/{owner}/{repo}/issues/{issue_number}/labels"
     ],
     listMilestones: ["GET /repos/{owner}/{repo}/milestones"],
+    listSubIssues: [
+      "GET /repos/{owner}/{repo}/issues/{issue_number}/sub_issues"
+    ],
     lock: ["PUT /repos/{owner}/{repo}/issues/{issue_number}/lock"],
     removeAllLabels: [
       "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels"
@@ -4014,6 +4119,12 @@ var Endpoints = {
     ],
     removeLabel: [
       "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}"
+    ],
+    removeSubIssue: [
+      "DELETE /repos/{owner}/{repo}/issues/{issue_number}/sub_issue"
+    ],
+    reprioritizeSubIssue: [
+      "PATCH /repos/{owner}/{repo}/issues/{issue_number}/sub_issues/priority"
     ],
     setLabels: ["PUT /repos/{owner}/{repo}/issues/{issue_number}/labels"],
     unlock: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/lock"],
@@ -4088,7 +4199,11 @@ var Endpoints = {
   },
   orgs: {
     addSecurityManagerTeam: [
-      "PUT /orgs/{org}/security-managers/teams/{team_slug}"
+      "PUT /orgs/{org}/security-managers/teams/{team_slug}",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.addSecurityManagerTeam() is deprecated, see https://docs.github.com/rest/orgs/security-managers#add-a-security-manager-team"
+      }
     ],
     assignTeamToOrgRole: [
       "PUT /orgs/{org}/organization-roles/teams/{team_slug}/{role_id}"
@@ -4104,7 +4219,6 @@ var Endpoints = {
     convertMemberToOutsideCollaborator: [
       "PUT /orgs/{org}/outside_collaborators/{username}"
     ],
-    createCustomOrganizationRole: ["POST /orgs/{org}/organization-roles"],
     createInvitation: ["POST /orgs/{org}/invitations"],
     createOrUpdateCustomProperties: ["PATCH /orgs/{org}/properties/schema"],
     createOrUpdateCustomPropertiesValuesForRepos: [
@@ -4115,12 +4229,13 @@ var Endpoints = {
     ],
     createWebhook: ["POST /orgs/{org}/hooks"],
     delete: ["DELETE /orgs/{org}"],
-    deleteCustomOrganizationRole: [
-      "DELETE /orgs/{org}/organization-roles/{role_id}"
-    ],
     deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
     enableOrDisableSecurityProductOnAllOrgRepos: [
-      "POST /orgs/{org}/{security_product}/{enablement}"
+      "POST /orgs/{org}/{security_product}/{enablement}",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.enableOrDisableSecurityProductOnAllOrgRepos() is deprecated, see https://docs.github.com/rest/orgs/orgs#enable-or-disable-a-security-feature-for-an-organization"
+      }
     ],
     get: ["GET /orgs/{org}"],
     getAllCustomProperties: ["GET /orgs/{org}/properties/schema"],
@@ -4137,6 +4252,7 @@ var Endpoints = {
     ],
     list: ["GET /organizations"],
     listAppInstallations: ["GET /orgs/{org}/installations"],
+    listAttestations: ["GET /orgs/{org}/attestations/{subject_digest}"],
     listBlockedUsers: ["GET /orgs/{org}/blocks"],
     listCustomPropertiesValuesForRepos: ["GET /orgs/{org}/properties/values"],
     listFailedInvitations: ["GET /orgs/{org}/failed_invitations"],
@@ -4162,12 +4278,15 @@ var Endpoints = {
     listPatGrants: ["GET /orgs/{org}/personal-access-tokens"],
     listPendingInvitations: ["GET /orgs/{org}/invitations"],
     listPublicMembers: ["GET /orgs/{org}/public_members"],
-    listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
+    listSecurityManagerTeams: [
+      "GET /orgs/{org}/security-managers",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.listSecurityManagerTeams() is deprecated, see https://docs.github.com/rest/orgs/security-managers#list-security-manager-teams"
+      }
+    ],
     listWebhookDeliveries: ["GET /orgs/{org}/hooks/{hook_id}/deliveries"],
     listWebhooks: ["GET /orgs/{org}/hooks"],
-    patchCustomOrganizationRole: [
-      "PATCH /orgs/{org}/organization-roles/{role_id}"
-    ],
     pingWebhook: ["POST /orgs/{org}/hooks/{hook_id}/pings"],
     redeliverWebhookDelivery: [
       "POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"
@@ -4184,7 +4303,11 @@ var Endpoints = {
       "DELETE /orgs/{org}/public_members/{username}"
     ],
     removeSecurityManagerTeam: [
-      "DELETE /orgs/{org}/security-managers/teams/{team_slug}"
+      "DELETE /orgs/{org}/security-managers/teams/{team_slug}",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.removeSecurityManagerTeam() is deprecated, see https://docs.github.com/rest/orgs/security-managers#remove-a-security-manager-team"
+      }
     ],
     reviewPatGrantRequest: [
       "POST /orgs/{org}/personal-access-token-requests/{pat_request_id}"
@@ -4308,6 +4431,18 @@ var Endpoints = {
     ],
     restorePackageVersionForUser: [
       "POST /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
+    ]
+  },
+  privateRegistries: {
+    createOrgPrivateRegistry: ["POST /orgs/{org}/private-registries"],
+    deleteOrgPrivateRegistry: [
+      "DELETE /orgs/{org}/private-registries/{secret_name}"
+    ],
+    getOrgPrivateRegistry: ["GET /orgs/{org}/private-registries/{secret_name}"],
+    getOrgPublicKey: ["GET /orgs/{org}/private-registries/public-key"],
+    listOrgPrivateRegistries: ["GET /orgs/{org}/private-registries"],
+    updateOrgPrivateRegistry: [
+      "PATCH /orgs/{org}/private-registries/{secret_name}"
     ]
   },
   projects: {
@@ -4512,6 +4647,7 @@ var Endpoints = {
     compareCommitsWithBasehead: [
       "GET /repos/{owner}/{repo}/compare/{basehead}"
     ],
+    createAttestation: ["POST /repos/{owner}/{repo}/attestations"],
     createAutolink: ["POST /repos/{owner}/{repo}/autolinks"],
     createCommitComment: [
       "POST /repos/{owner}/{repo}/commits/{commit_sha}/comments"
@@ -4547,7 +4683,6 @@ var Endpoints = {
     createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
     createRelease: ["POST /repos/{owner}/{repo}/releases"],
     createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
-    createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
     createUsingTemplate: [
       "POST /repos/{template_owner}/{template_repo}/generate"
     ],
@@ -4599,9 +4734,6 @@ var Endpoints = {
       "DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"
     ],
     deleteRepoRuleset: ["DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
-    deleteTagProtection: [
-      "DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"
-    ],
     deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
     disableAutomatedSecurityFixes: [
       "DELETE /repos/{owner}/{repo}/automated-security-fixes"
@@ -4736,6 +4868,9 @@ var Endpoints = {
       "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}"
     ],
     listActivities: ["GET /repos/{owner}/{repo}/activity"],
+    listAttestations: [
+      "GET /repos/{owner}/{repo}/attestations/{subject_digest}"
+    ],
     listAutolinks: ["GET /repos/{owner}/{repo}/autolinks"],
     listBranches: ["GET /repos/{owner}/{repo}/branches"],
     listBranchesForHeadCommit: [
@@ -4778,7 +4913,6 @@ var Endpoints = {
       "GET /repos/{owner}/{repo}/releases/{release_id}/assets"
     ],
     listReleases: ["GET /repos/{owner}/{repo}/releases"],
-    listTagProtection: ["GET /repos/{owner}/{repo}/tags/protection"],
     listTags: ["GET /repos/{owner}/{repo}/tags"],
     listTeams: ["GET /repos/{owner}/{repo}/teams"],
     listWebhookDeliveries: [
@@ -4893,9 +5027,13 @@ var Endpoints = {
     users: ["GET /search/users"]
   },
   secretScanning: {
+    createPushProtectionBypass: [
+      "POST /repos/{owner}/{repo}/secret-scanning/push-protection-bypasses"
+    ],
     getAlert: [
       "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"
     ],
+    getScanHistory: ["GET /repos/{owner}/{repo}/secret-scanning/scan-history"],
     listAlertsForEnterprise: [
       "GET /enterprises/{enterprise}/secret-scanning/alerts"
     ],
@@ -5049,6 +5187,7 @@ var Endpoints = {
     ],
     follow: ["PUT /user/following/{username}"],
     getAuthenticated: ["GET /user"],
+    getById: ["GET /user/{account_id}"],
     getByUsername: ["GET /users/{username}"],
     getContextForUser: ["GET /users/{username}/hovercard"],
     getGpgKeyForAuthenticated: [
@@ -5067,6 +5206,7 @@ var Endpoints = {
       "GET /user/ssh_signing_keys/{ssh_signing_key_id}"
     ],
     list: ["GET /users"],
+    listAttestations: ["GET /users/{username}/attestations/{subject_digest}"],
     listBlockedByAuthenticated: [
       "GET /user/blocks",
       {},
@@ -5335,7 +5475,7 @@ var RequestError = class extends Error {
     if (options.request.headers.authorization) {
       requestCopy.headers = Object.assign({}, options.request.headers, {
         authorization: options.request.headers.authorization.replace(
-          / .*$/,
+          /(?<! ) .*$/,
           " [REDACTED]"
         )
       });
@@ -5403,7 +5543,7 @@ var import_endpoint = __nccwpck_require__(9440);
 var import_universal_user_agent = __nccwpck_require__(5030);
 
 // pkg/dist-src/version.js
-var VERSION = "8.4.0";
+var VERSION = "8.4.1";
 
 // pkg/dist-src/is-plain-object.js
 function isPlainObject(value) {
@@ -5462,7 +5602,7 @@ function fetchWrapper(requestOptions) {
       headers[keyAndValue[0]] = keyAndValue[1];
     }
     if ("deprecation" in headers) {
-      const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
+      const matches = headers.link && headers.link.match(/<([^<>]+)>; rel="deprecation"/);
       const deprecationLink = matches && matches.pop();
       log.warn(
         `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
@@ -5624,18 +5764,18 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // pkg/dist-src/index.js
-var dist_src_exports = {};
-__export(dist_src_exports, {
+var index_exports = {};
+__export(index_exports, {
   Octokit: () => Octokit
 });
-module.exports = __toCommonJS(dist_src_exports);
+module.exports = __toCommonJS(index_exports);
 var import_core = __nccwpck_require__(6762);
 var import_plugin_request_log = __nccwpck_require__(8883);
 var import_plugin_paginate_rest = __nccwpck_require__(4193);
 var import_plugin_rest_endpoint_methods = __nccwpck_require__(3044);
 
 // pkg/dist-src/version.js
-var VERSION = "20.1.1";
+var VERSION = "20.1.2";
 
 // pkg/dist-src/index.js
 var Octokit = import_core.Octokit.plugin(
