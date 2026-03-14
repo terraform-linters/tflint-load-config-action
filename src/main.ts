@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as os from 'os'
 import * as path from 'path'
-import {copyFile} from './copy'
+import {copyFile} from './copy.js'
 
 async function run(): Promise<void> {
   const [owner, repo] = core.getInput('source-repo').split('/')
