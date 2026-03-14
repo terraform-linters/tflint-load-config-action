@@ -7,7 +7,7 @@ on: # rebuild any PRs and main branch changes
       - 'releases/*'
 permissions: {}
 jobs:
-  test: # make sure build/ci work properly
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -17,9 +17,17 @@ jobs:
         with:
           node-version: ${{ steps.node-version.outputs.version }}
           cache: npm
-      - run: |
-          npm ci
-      - run: |
-          npm run all
-        env:
-          INPUT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm ci
+      - run: npm run all
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - id: load-config
+        uses: ./
+        with:
+          source-repo: ${{ github.repository }}
+          source-path: fixtures/.tflint.hcl
+          source-ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: diff <(cat "${{ steps.load-config.outputs.path }}") fixtures/.tflint.hcl
