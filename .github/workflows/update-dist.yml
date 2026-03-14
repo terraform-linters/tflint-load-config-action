@@ -5,12 +5,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ github.head_ref }}
       - id: node-version
-        uses: bendrucker/github-action-node-version@v1
-      - uses: actions/setup-node@v4
+        uses: bendrucker/github-action-node-version@2b4cda19381b8015197f9a3eff1ec934716241da # v1.0.0
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
         with:
           node-version: ${{ steps.node-version.outputs.version }}
           cache: npm
@@ -18,7 +18,7 @@ jobs:
         run: npm ci
       - name: Update dist
         run: npm run build && npm run package
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5.1.0
         with:
           commit_message: Update dist
           file_pattern: dist/*
