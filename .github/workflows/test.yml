@@ -9,10 +9,10 @@ jobs:
   test: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - id: node-version
-        uses: bendrucker/github-action-node-version@v1
-      - uses: actions/setup-node@v4
+        uses: bendrucker/github-action-node-version@2b4cda19381b8015197f9a3eff1ec934716241da # v1.0.0
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
         with:
           node-version: ${{ steps.node-version.outputs.version }}
           cache: npm
