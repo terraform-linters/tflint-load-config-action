@@ -13,7 +13,7 @@ jobs:
           ref: ${{ github.head_ref }}
       - id: node-version
         uses: bendrucker/github-action-node-version@2b4cda19381b8015197f9a3eff1ec934716241da # v1.0.0
-      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: ${{ steps.node-version.outputs.version }}
           cache: npm
