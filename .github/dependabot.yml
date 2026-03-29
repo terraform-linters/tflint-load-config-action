@@ -10,5 +10,9 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    groups:
+      actions:
+        patterns:
+          - "@actions/*"
     cooldown:
       default-days: 5
