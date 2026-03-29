@@ -1,12 +1,11 @@
 import github from 'eslint-plugin-github'
-import tseslint from 'typescript-eslint'
 
 const configs = github.getFlatConfigs()
 
-export default tseslint.config(
+export default [
   {ignores: ['dist/', 'lib/']},
   configs.recommended,
-  ...tseslint.configs.recommended,
+  ...configs.typescript,
   {
     languageOptions: {
       parserOptions: {
@@ -55,4 +54,4 @@ export default tseslint.config(
       '@typescript-eslint/unbound-method': 'error',
     },
   },
-)
+]
