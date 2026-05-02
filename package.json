@@ -29,7 +29,7 @@
     "node-fetch": "^2.6.12"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.6.0",
     "@types/node-fetch": "^2.6.4",
     "@vercel/ncc": "^0.38.4",
     "eslint": "^8.57.0",
