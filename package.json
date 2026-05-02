@@ -24,7 +24,7 @@
   "author": "terraform-linters",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^3.0.0",
+    "@actions/core": "^3.0.1",
     "@octokit/rest": "^22.0.1",
     "node-fetch": "^2.6.12"
   },
