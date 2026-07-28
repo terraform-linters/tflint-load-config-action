@@ -14,5 +14,12 @@ updates:
       actions:
         patterns:
           - "@actions/*"
+      eslint:
+        patterns:
+          - eslint
+          - eslint-*
+          - "@eslint/*"
+          - "@typescript-eslint/*"
+          - typescript-eslint
     cooldown:
       default-days: 5
