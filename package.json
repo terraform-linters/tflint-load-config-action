@@ -32,9 +32,9 @@
     "@types/node": "^26.4.0",
     "@types/node-fetch": "^2.6.13",
     "@vercel/ncc": "^0.45.0",
-    "eslint": "^10.7.0",
+    "eslint": "^10.9.1",
     "eslint-import-resolver-typescript": "^4.4.5",
-    "eslint-plugin-github": "^6.1.1",
+    "eslint-plugin-github": "^6.1.2",
     "js-yaml": "^5.4.1",
     "prettier": "3.9.6",
     "typescript": "^6.0.3"
