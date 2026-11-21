@@ -8,12 +8,12 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.head_ref }}
       - id: node-version
-        uses: bendrucker/github-action-node-version@a4a29b4a035acb713166f8bbaffa2c0265c8109b # v1.0.3
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: bendrucker/github-action-node-version@v1.0.3
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: ${{ steps.node-version.outputs.version }}
           cache: npm
@@ -21,7 +21,7 @@ jobs:
         run: npm ci
       - name: Update dist
         run: npm run build && npm run package
-      - uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
+      - uses: stefanzweifel/git-auto-commit-action@v7.2.0
         with:
           commit_message: Update dist
           file_pattern: dist/*
