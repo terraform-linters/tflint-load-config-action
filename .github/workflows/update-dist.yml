@@ -21,7 +21,7 @@ jobs:
         run: npm ci
       - name: Update dist
         run: npm run build && npm run package
-      - uses: stefanzweifel/git-auto-commit-action@v7.2.0
+      - uses: stefanzweifel/git-auto-commit-action@v7.2.1
         with:
           commit_message: Update dist
           file_pattern: dist/*
